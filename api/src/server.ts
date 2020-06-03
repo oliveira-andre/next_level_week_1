@@ -1,6 +1,7 @@
 import express from 'express';
 
 const app = express();
+app.use(express.json());
 
 const users = [
   'Andre',
@@ -9,7 +10,10 @@ const users = [
 ];
 
 app.get('/users', (req, res) => { 
-  return res.json(users);
+  const search = String(req.query.search);
+  const filteredUsers = search ? users.filter(user => user.includes(search)) : users;
+
+  return res.json(filteredUsers);
 });
 
 app.get('/users/:id', (req, res) => {
@@ -20,7 +24,8 @@ app.get('/users/:id', (req, res) => {
 });
 
 app.post('/users', (req, res) => {
-  const user = { name: 'Andre Oliveira', email: 'root@root.com' };
+  const data = req.body;
+  const user = { name: data.name, email: data.email };
 
   return res.json(user);
 });
