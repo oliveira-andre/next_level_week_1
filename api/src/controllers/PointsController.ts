@@ -20,7 +20,7 @@ class PointsController {
     const { name, email, whatsapp, longitude, latitude, uf, city, items } = req.body;
     const trx = await knex.transaction();
     const point = {
-      image: 'fake-image',
+      image: 'https://images.unsplash.com/photo-1591199571558-25db3c59609f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2134&q=80',
       name,
       email,
       whatsapp,
