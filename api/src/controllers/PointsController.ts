@@ -42,7 +42,12 @@ class PointsController {
       return res.status(400).json({ message: 'Point not found' });
     };
 
-    return res.json(point);
+    const items = await knex('items')
+      .join('point_items', 'items.id', '=', 'point_items.item_id')
+      .where('point_items.point_id', id)
+      .select('items.title');
+
+    return res.json({ point, items });
   };
 };
 
