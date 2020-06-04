@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev src/server.ts",
-    "knex:seed": "yarn knex migrate:latest --knexfile knexfile.ts seed:run",
+    "knex:seed": "yarn knex --knexfile knexfile.ts seed:run",
     "knex:migrate": "yarn knex --knexfile knexfile.ts migrate:latest"
   },
   "dependencies": {
