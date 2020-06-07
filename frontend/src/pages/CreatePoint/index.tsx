@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
+import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet';
@@ -28,6 +28,12 @@ const CreatePoint = () => {
   const [ufs, setUfs] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0]);
+  const [inputData, setInputData] = useState({
+    name: '',
+    email: '',
+    whatsapp: '',
+  });
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [selectedUf, setSelectedUf] = useState('0');
   const [selectedCity, setSelectedCity] = useState('0');
   const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]);
@@ -82,6 +88,45 @@ const CreatePoint = () => {
     ]);
   };
 
+  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
+    setInputData({ ...inputData, [e.target.name]: e.target.value });
+  };
+
+  function handleSelectItem(id: number) {
+    const alreadySelected = selectedItems.findIndex(item => item === id);
+
+    if (alreadySelected >= 0) {
+      const filteredItems = selectedItems.filter(item => item !== id);
+
+      setSelectedItems(filteredItems);
+    } else { 
+    setSelectedItems([...selectedItems, id]);
+    }
+  };
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+
+    const { name, email, whatsapp } = inputData;
+    const uf = selectedUf;
+    const city = selectedCity;
+    const [latitude, longitude] = selectedPosition;
+    const items = selectedItems;
+    
+    const data = {
+      name,
+      email,
+      whatsapp,
+      uf,
+      city,
+      latitude,
+      longitude,
+      items
+    };
+
+    await api.post('/points', data);
+  };
+
   return (
     <div id="page-create-point">
       <header>
@@ -93,7 +138,7 @@ const CreatePoint = () => {
         </Link>
       </header>
 
-      <form>
+      <form onSubmit={handleSubmit}>
         <h1>Cadastro do <br /> ponto de coleta</h1>
 
         <fieldset>
@@ -103,18 +148,18 @@ const CreatePoint = () => {
 
             <div className="field">
               <label htmlFor="name">Nome da entidade</label>
-              <input type="text" id="name" name="name" />
+              <input type="text" id="name" name="name" onChange={handleInputChange} />
             </div>
 
             <div className="field-group">            
               <div className="field">
                 <label htmlFor="email">E-mail</label>
-                <input type="text" id="email" name="email" />
+                <input type="text" id="email" name="email" onChange={handleInputChange} />
               </div>
 
               <div className="field">
                 <label htmlFor="whatsapp">WhatsApp</label>
-                <input type="text" id="whatsapp" name="whatsapp" />
+                <input type="text" id="whatsapp" name="whatsapp" onChange={handleInputChange} />
               </div>
             </div>
           </fieldset>
@@ -164,7 +209,8 @@ const CreatePoint = () => {
 
             <ul className="items-grid">
               { items.map(item => (
-                <li key={item.id}>
+                <li key={item.id} onClick={() => handleSelectItem(item.id)} 
+                  className={selectedItems.includes(item.id) ? 'selected' : ''}>
                   <img src={item.image_url} alt={item.title} />
                   <span>{item.title}</span>
                 </li>  
