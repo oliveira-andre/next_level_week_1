@@ -1,4 +1,4 @@
-# Next Level Week 1 (NLW - Rocketseat) - UNCONCLUDED
+# Next Level Week 1 (NLW - Rocketseat) - on going
 
 ### Api
 
