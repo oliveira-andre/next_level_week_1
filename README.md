@@ -1,6 +1,6 @@
 # Next Level Week 1 (NLW - Rocketseat) - on going
 
-### Api
+### [Backend](./api/README.md)
 
 - Node
 - TypeScript
@@ -10,7 +10,7 @@
 - sqlite
 
 
-### frontend
+### [Frontend](./frontend/README.md)
 
 - React
 - TypeScript
